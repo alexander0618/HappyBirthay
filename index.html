@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pagina în construcție</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#0b1220" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b1220; --panel:#0f172a; --ink:#dbeafe; --muted:#94a3b8; --accent:#7ef29d; --gold:#f2c46d;
+      --shadow:0 12px 40px rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0; font-family:Poppins, system-ui, -apple-system, Segoe UI, Roboto, Arial; background:radial-gradient(1200px 800px at 70% -10%, rgba(126,242,157,.08), transparent 60%), radial-gradient(800px 600px at 20% 110%, rgba(242,196,109,.06), transparent 60%), var(--bg); color:var(--ink);}
+    .wrap{min-height:100%; display:grid; place-items:center; padding:24px}
+    .card{width:min(720px, 92vw); background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.08); border-radius:20px; box-shadow:var(--shadow); padding:28px; text-align:center}
+    .sig{display:inline-flex; width:14px; height:14px; border-radius:999px; background:linear-gradient(135deg, var(--gold), #ffd48f); box-shadow:0 0 28px rgba(242,196,109,.45); margin-right:10px}
+    h1{margin:.2rem 0 .6rem; font-weight:600; letter-spacing:.2px}
+    p{color:var(--muted)}
+    .count{font-variant-numeric:tabular-nums; font-weight:600; font-size:clamp(18px, 4vw, 26px); color:var(--accent); margin:18px 0}
+    .btn{display:inline-block; margin-top:10px; padding:10px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.04); color:var(--ink); text-decoration:none}
+    .small{font-size:.95rem; color:#9aa4b2}
+    .footer{margin-top:14px; font-size:.9rem; color:#8a94a6}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card" role="status" aria-live="polite">
+      <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:6px">
+        <span class="sig" aria-hidden="true"></span>
+        <strong>Pagina este în construcție</strong>
+      </div>
+      <h1>Revenim curând</h1>
+      <p>This site is down</p>
+      <div id="count" class="count">Se încarcă…</div>
+      <a href="#" class="btn" id="refresh">Reîncarcă</a>
+      <div class="footer">Mulțumim pentru răbdare.</div>
+      <div class="small">Dacă ai ajuns aici din greșeală, nu este nimic în neregulă cu dispozitivul tău.</div>
+    </section>
+  </main>
+
+  <script>
+    // CONFIG: setează data lansării (YYYY-MM-DD hh:mm în ora locală)
+    const TARGET_DATE = new Date(Date.now() + 7*24*60*60*1000); // +7 zile implicit
+
+    const countEl = document.getElementById('count');
+    const btn = document.getElementById('refresh');
+    btn.addEventListener('click', (e)=>{ e.preventDefault(); location.reload(); });
+
+    function fmt(n){ return String(n).padStart(2,'0'); }
+    function tick(){
+      const now = new Date();
+      let ms = TARGET_DATE - now;
+      if(ms <= 0){ countEl.textContent = 'Curând.'; return; }
+      const d = Math.floor(ms / (24*60*60*1000)); ms %= 24*60*60*1000;
+      const h = Math.floor(ms / (60*60*1000)); ms %= 60*60*1000;
+      const m = Math.floor(ms / (60*1000)); ms %= 60*1000;
+      const s = Math.floor(ms / 1000);
+      countEl.textContent = `${d} zile • ${fmt(h)}:${fmt(m)}:${fmt(s)}`;
+      requestAnimationFrame(tick);
+    }
+    tick();
+
+    // OPȚIONAL: Dacă adaugi la URL ?access=secret și vrei să redirecționezi în altă parte:
+    // const p = new URLSearchParams(location.search);
+    // if(p.get('access') === 'sun-moon-truth') location.href = '/gift/';
+  </script>
+</body>
+</html>
