@@ -14,13 +14,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#0b1220;           /* noapte adâncă */
-      --card:#0f172a;         /* albastru-slate */
-      --ink:#dbeafe;          /* lumină moale */
-      --muted:#94a3b8;        /* lumină de lună */
-      --accent:#7ef29d;       /* verde auroră */
-      --gold:#f2c46d;         /* soare */
-      --moon:#c3dafe;         /* luna */
+      --bg:#0b1220;  
+      --card:#0f172a;         
+      --ink:#dbeafe;         
+      --muted:#94a3b8;        
+      --accent:#7ef29d;      
+      --gold:#f2c46d;         
+      --moon:#c3dafe;         
       --radius:18px;
       --shadow:0 10px 30px rgba(0,0,0,.35), 0 1px 0 rgba(255,255,255,.03) inset;
     }
@@ -77,7 +77,7 @@
     .tp-row{display:flex; gap:8px}
     @media(max-width:780px){
       .touchpad{display:flex}
-      .game-ui .pill:nth-child(2){display:none} /* ascunde indiciul pentru tastatură pe ecrane mici */
+      .game-ui .pill:nth-child(2){display:none} /* ascunde indiciul pentru tastatura pe ecrane mici */
     }
 
     /* Footer */
@@ -172,7 +172,7 @@
   </footer>
 
   <script>
-    // --- Fundal înstelat — optimizat pentru telefon (DPR scaling) -----------
+    // --- Fundal instelat — optimizat pentru telefon (DPR scaling) -----------
     const sky = document.getElementById('sky');
     const sctx = sky.getContext('2d');
     let stars = [];
@@ -202,7 +202,7 @@
     addEventListener('resize', ()=>{fitSky(); makeStars();});
     fitSky(); makeStars(); drawSky();
 
-    // --- Mini‑joc Constelații — mobil + desktop -----------------------------
+    // --- Mini‑joc Constelatii — mobil + desktop -----------------------------
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const progress = document.getElementById('progress');
@@ -219,7 +219,7 @@
       {x: 0.5, y: 0.18, r:10, hit:false},
     ];
 
-    const glyph = [ // constelație tip "ADEVARUL"/"TRUTH"
+    const glyph = [ // constelatie tip "ADEVARUL"/"TRUTH"
       {x:0.20, y:0.65}, {x:0.28, y:0.45}, {x:0.36, y:0.65},
       {x:0.28, y:0.45}, {x:0.44, y:0.45},
       {x:0.50, y:0.65}, {x:0.50, y:0.45},
@@ -243,13 +243,13 @@
       comet.x = world.w*0.5; comet.y = world.h*0.8; comet.vx=0; comet.vy=0;
       orbs.forEach(o=>o.hit=false); collected = 0;
       progress.textContent = `Stele: ${collected} / 3`;
-      unlocked = false; // poți rejuca
+      unlocked = false; // poti rejuca
       if (everUnlocked) {
-        unlockRow.classList.add('show'); // menține butonul deblocare vizibil
+        unlockRow.classList.add('show'); // mentine butonul deblocare vizibil
       } else {
         unlockRow.classList.remove('show');
       }
-      // curăță pânza (constelația desenată anterior dispare după reset)
+      // curata panza (constelatia desenată anterior dispare după reset)
       ctx.clearRect(0,0,world.w,world.h);
     }
 
@@ -340,10 +340,10 @@
     }
     Array.from(document.querySelectorAll('.tp')).forEach(bindTouch);
 
-    // Buton reset: resetează jocul dar păstrează accesul la video dacă a fost deblocat vreodată
+    // Buton reset: reseteaza jocul dar pastrează accesul la video daca a fost deblocat vreodata
     resetBtn.addEventListener('click', () => {
       resetGame();
-      requestAnimationFrame(loop); // repornește animația dacă fusese oprită
+      requestAnimationFrame(loop); // reporneste animatia dacă fusese oprita
     });
 
     // fit & start
@@ -351,10 +351,10 @@
     fitGame();
     loop();
 
-    // --- Video (accesibil doar după prima finalizare; rămâne accesibil ulterior) ---
+    // --- Video (accesibil doar după prima finalizare; ramane accesibil ulterior) ---
     const giftVideo = document.getElementById('giftVideo');
 
-    // Blochează interacțiunea până la prima deblocare
+    // Blocheaza interactiunea până la prima deblocare
     giftVideo.addEventListener('click', (e) => {
       if (!everUnlocked) {
         e.preventDefault();
