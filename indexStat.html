@@ -147,7 +147,7 @@
             </div>
           </div>
           <div class="unlock" id="unlockRow">
-            <a class="btn" href="#video">Deblocat — Deschide cadoul</a>
+            <a class="btn" href="#video">Deblocat — Deschide cadoul<br> *Constelatia Fecioara</a>
           </div>
         </div>
       </article>
@@ -221,15 +221,20 @@
       {x: 0.5, y: 0.18, r:10, hit:false},
     ];
 
-    const glyph = [ // constelatie tip "ADEVARUL"/"TRUTH"
-      {x:0.20, y:0.65}, {x:0.28, y:0.45}, {x:0.36, y:0.65},
-      {x:0.28, y:0.45}, {x:0.44, y:0.45},
-      {x:0.50, y:0.65}, {x:0.50, y:0.45},
-      {x:0.56, y:0.65}, {x:0.56, y:0.52},
-      {x:0.62, y:0.65}, {x:0.62, y:0.45},
-      {x:0.68, y:0.65}, {x:0.68, y:0.52},
-      {x:0.74, y:0.65}, {x:0.74, y:0.45}
+    const glyph = [ // constelatia Fecioara
+      {x:0.30,y:0.42},{x:0.36,y:0.46},{x:0.40,y:0.52},{x:0.44,y:0.58},
+      null,
+      {x:0.44,y:0.58},{x:0.50,y:0.56},{x:0.56,y:0.58},{x:0.60,y:0.62},
+      null,
+      {x:0.56,y:0.58},{x:0.64,y:0.56},{x:0.72,y:0.60},{x:0.78,y:0.66},
+      null,
+      {x:0.50,y:0.56},{x:0.48,y:0.64},{x:0.46,y:0.70},
+      null,
+      {x:0.44,y:0.58},{x:0.42,y:0.50},{x:0.44,y:0.45}
+
     ];
+
+    const spica = { x: 0.78, y: 0.66 }; // α Virginis (Spica)
 
     let collected = 0, unlocked = false, everUnlocked = false;
 
@@ -245,9 +250,9 @@
       comet.x = world.w*0.5; comet.y = world.h*0.8; comet.vx=0; comet.vy=0;
       orbs.forEach(o=>o.hit=false); collected = 0;
       progress.textContent = `Stele: ${collected} / 3`;
-      unlocked = false; // poti rejuca
+      unlocked = false;
       if (everUnlocked) {
-        unlockRow.classList.add('show'); // mentine butonul deblocare vizibil
+        unlockRow.classList.add('show');
       } else {
         unlockRow.classList.remove('show');
       }
@@ -308,25 +313,46 @@
       if(!unlocked) requestAnimationFrame(loop);
     }
 
-    function revealConstellation(){
-      let t = 0; const path = glyph.map(p=>({x: p.x*world.w, y:p.y*world.h}));
-      function anim(){
-        ctx.globalAlpha = 1; ctx.lineWidth = 2; ctx.strokeStyle = '#ffd48f';
-        ctx.beginPath();
-        for(let i=0;i<path.length-1;i++){
-          const a = path[i], b = path[i+1];
-          ctx.moveTo(a.x, a.y); ctx.lineTo(a.x + (b.x-a.x)*Math.min(1, t/2000), a.y + (b.y-a.y)*Math.min(1, t/2000));
-        }
-        ctx.stroke();
-        for(const p of path){
-          const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 10);
-          g.addColorStop(0,'rgba(242,196,109,.9)'); g.addColorStop(1,'rgba(242,196,109,0)');
-          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, 10, 0, Math.PI*2); ctx.fill();
-        }
-        t += 16; if(t<2200) requestAnimationFrame(anim);
-      }
-      anim();
+function revealConstellation(){
+  let t = 0;
+  const path = glyph.map(p => p && ({ x: p.x*world.w, y: p.y*world.h }));
+  function anim(){
+    ctx.globalAlpha = 1; ctx.lineWidth = 2; ctx.strokeStyle = '#ffd48f';
+    ctx.beginPath();
+    for (let i = 0; i < path.length - 1; i++) {
+      const a = path[i], b = path[i+1];
+      if (!a || !b) continue; // pauză între segmente
+      const k = Math.min(1, t/2000);
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(a.x + (b.x - a.x)*k, a.y + (b.y - a.y)*k);
     }
+    ctx.stroke();
+
+    // scântei pe fiecare punct valid
+    for (const p of path) {
+      if (!p) continue;
+      const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 10);
+      g.addColorStop(0,'rgba(242,196,109,.9)');
+      g.addColorStop(1,'rgba(242,196,109,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, 10, 0, Math.PI*2); ctx.fill();
+    }
+
+    // evidențiază Spica (mai mare, mai strălucitoare)
+    if (spica) {
+      const sx = spica.x * world.w, sy = spica.y * world.h;
+      const g2 = ctx.createRadialGradient(sx, sy, 0, sx, sy, 18);
+      g2.addColorStop(0, 'rgba(255,255,255,.95)');
+      g2.addColorStop(0.4, 'rgba(242,196,109,.8)');
+      g2.addColorStop(1, 'rgba(242,196,109,0)');
+      ctx.fillStyle = g2; ctx.beginPath(); ctx.arc(sx, sy, 18, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(sx, sy, 3, 0, Math.PI*2); ctx.fill();
+    }
+
+    t += 16; if (t < 2200) requestAnimationFrame(anim);
+  }
+  anim();
+}
+
 
     addEventListener('keydown', e=>{ keys[e.key] = true; });
     addEventListener('keyup', e=>{ keys[e.key] = false; });
